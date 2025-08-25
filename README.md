@@ -1,6 +1,6 @@
 # Desintoxicación Digital PRO
 
-App web gratuita para reducir el uso compulsivo de dispositivos digitales. Incluye e-book, diagnóstico, plan personalizado, temporizador y modo familia.
+App web pago $2 dolares suscripción mensual para reducir el uso compulsivo de dispositivos digitales. Incluye e-book, diagnóstico, plan personalizado, temporizador y modo familia.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/deploy-status)](https://app.netlify.com/sites/desintoxicacion-digital/deploys)
 
@@ -60,7 +60,7 @@ https://desintoxicacion-digital.netlify.app/
 
 ## 📄 Licencia
 
-Este proyecto es de uso gratuito para fines personales y educativos. Para uso comercial, contactar al autor.
+Este proyecto es de uso para fines personales y educativos. Para uso comercial.
 
 ---
 
