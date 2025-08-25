@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Desintoxicación Digital PRO — E-book + Diagnóstico + Plan Personal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js para gráfico de progreso -->
+  <script src=" https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js "></script>
+</head>
+<body>
+  <!-- Top bar -->
+  <header class="container">
+    <div class="banner">
+      <span class="chip">SEPTELLIST</span>
+      <div style="flex:1">E-book <b>gratuito</b> → Web <b>PRO</b> que resuelve la intoxicación digital (diagnóstico, plan, niños).</div>
+      <label class="row" style="align-items:center;gap:8px">
+        <span class="small">Modo oscuro</span>
+        <input id="darkToggle" class="switch" type="checkbox" checked>
+      </label>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="container hero">
+    <span class="badge">📱 Desintoxicación Digital — Método 7 días</span>
+    <h1 class="h1">Recuperá tu enfoque. <span class="txt-gradient">La web hace el resto.</span></h1>
+    <p class="sub">Entregá primero el <b>e-book gratis</b> (estilo revista). Después, esta app genera un <b>plan personalizado</b>, bloqueos por horario, exportación <b>.ics</b>, <b>temporizador</b>, gráficos, badges y <b>Modo Familia</b>. Gratis para diagnóstico. PRO para funciones avanzadas.</p>
+    <div class="row" style="margin-top:16px">
+      <a class="btn" href="#ebook">📕 Ver e-book gratis</a>
+      <a class="btn alt" href="#app">🚀 Entrar a la app</a>
+      <button class="btn alt" id="openOnboard">❓ Cómo funciona</button>
+    </div>
+  </section>
+
+  <!-- Onboarding -->
+  <div id="onboard" class="hidden">
+    <div class="modal">
+      <div class="h2">👋 Bienvenido</div>
+      <ol class="small" style="line-height:1.9">
+        <li>Completá el <b>Diagnóstico</b>.</li>
+        <li>Cargá tus <b>apps y minutos</b>.</li>
+        <li>Generá <b>Recomendaciones</b> y <b>Plan semanal</b>.</li>
+        <li>Usá el <b>Temporizador</b> y registrá progreso (gráfico).</li>
+        <li>Si tenés hijos, activá el <b>Modo Familia</b>.</li>
+      </ol>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="closeOnboard">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <main id="app" class="container grid cols-2">
+    <!-- Columna A -->
+    <section class="card">
+      <div class="h2">1) Diagnóstico rápido</div>
+      <label class="label">¿Con qué frecuencia ocurre…? (0=nunca / 5=siempre)</label>
+      <div class="grid">
+        <div>
+          <span class="small">Revisás el teléfono apenas despertás</span>
+          <input type="range" min="0" max="5" value="3" class="input q" data-weight="1.2">
+        </div>
+        <div>
+          <span class="small">Notificaciones interrumpen el trabajo</span>
+          <input type="range" min="0" max="5" value="4" class="input q" data-weight="1.4">
+        </div>
+        <div>
+          <span class="small">Doomscroll nocturno (>20 min)</span>
+          <input type="range" min="0" max="5" value="3" class="input q" data-weight="1.3">
+        </div>
+        <div>
+          <span class="small">Usás el móvil por aburrimiento/ansiedad</span>
+          <input type="range" min="0" max="5" value="3" class="input q" data-weight="1.1">
+        </div>
+      </div>
+      <div class="hr"></div>
+      <div class="row kpi">
+        <div>Índice de intoxicación:</div>
+        <b id="score">–</b>
+        <span id="scoreTag" class="tag">–</span>
+      </div>
+      <div class="progress" style="margin-top:8px"><span id="scoreBar" style="width:0%"></span></div>
+      <div class="small" style="margin-top:6px">Meta: bajar el índice <b>30–50%</b> en 2 semanas.</div>
+    </section>
+
+    <section class="card">
+      <div class="h2">2) Triggers y objetivos</div>
+      <label class="label">Seleccioná tus disparadores</label>
+      <div class="row" id="triggers">
+        <button class="chip" data-v="mañana">🌅 Mañana</button>
+        <button class="chip" data-v="tarde">🌤️ Tarde</button>
+        <button class="chip" data-v="noche">🌙 Noche</button>
+        <button class="chip" data-v="notifs">🔔 Notificaciones</button>
+        <button class="chip" data-v="aburrimiento">😐 Aburrimiento</button>
+        <button class="chip" data-v="ansiedad">😵‍💫 Ansiedad</button>
+      </div>
+      <div class="hr"></div>
+      <label class="label">Objetivo semanal</label>
+      <div class="grid cols-2">
+        <div>
+          <span class="small">Reducir tiempo total (%)</span>
+          <input id="goalReduce" class="input" type="number" min="10" max="80" value="30">
+        </div>
+        <div>
+          <span class="small">Ventana sin pantallas (h/día)</span>
+          <input id="goalOffline" class="input" type="number" min="1" max="8" value="2">
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn alt" id="saveProfile">💾 Guardar preferencias</button>
+      </div>
+    </section>
+
+    <!-- Columna B (apps) -->
+    <section class="card" style="grid-column:1/-1">
+      <div class="h2">3) Cargá tus apps más consumidas</div>
+      <div class="small">Ingresá 3–8 apps y minutos/día. El motor genera bloqueos, reemplazos y horarios.</div>
+      <div class="row" style="margin:10px 0">
+        <button class="chip preset">Instagram</button>
+        <button class="chip preset">TikTok</button>
+        <button class="chip preset">YouTube</button>
+        <button class="chip preset">WhatsApp</button>
+        <button class="chip preset">Facebook</button>
+        <button class="chip preset">X (Twitter)</button>
+        <button class="chip preset">Noticias</button>
+        <button class="chip preset">Juegos</button>
+      </div>
+      <div class="grid">
+        <table class="table" id="appsTable">
+          <thead>
+            <tr><th>App</th><th style="width:180px">Categoría</th><th style="width:140px">Min/día</th><th style="width:60px"></th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="row">
+          <input id="newApp" class="input" placeholder="Nombre de app">
+          <button class="btn alt" id="addApp">➕ Agregar</button>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <div class="row kpi">
+        <div>Total minutos/día:</div><b id="totalMins">0</b>
+        <span id="riskTag" class="tag">–</span>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="genPlan">⚡ Generar recomendaciones</button>
+        <button class="btn alt" id="clearAll">🗑️ Limpiar</button>
+      </div>
+    </section>
+
+    <!-- Recomendaciones -->
+    <section class="card">
+      <div class="h2">4) Recomendaciones personalizadas</div>
+      <div id="recs" class="grid"></div>
+    </section>
+
+    <!-- Plan + export -->
+    <section class="card">
+      <div class="h2">5) Plan semanal & exportación</div>
+      <div id="plan" class="grid"></div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn alt" id="printPlan">🖨️ Imprimir/Guardar PDF</button>
+        <button class="btn" id="exportIcs">📆 Exportar .ics</button>
+      </div>
+      <div class="small">Tip: cargá el .ics en Google Calendar / iCloud / Outlook.</div>
+    </section>
+
+    <!-- Temporizador + gráfico -->
+    <section class="card">
+      <div class="h2">6) Temporizador Deep Work</div>
+      <div class="row" style="align-items:center">
+        <div>
+          <label class="label">Trabajo (min)</label>
+          <input id="pomoWork" class="input" type="number" min="10" max="90" value="25">
+        </div>
+        <div>
+          <label class="label">Descanso (min)</label>
+          <input id="pomoBreak" class="input" type="number" min="3" max="30" value="5">
+        </div>
+        <div>
+          <label class="label">Ciclos</label>
+          <input id="pomoCycles" class="input" type="number" min="1" max="8" value="4">
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="pomoStart">▶️ Iniciar</button>
+        <button class="btn alt" id="pomoStop">⏹️ Detener</button>
+      </div>
+      <div class="kpi" style="margin-top:10px"><div id="pomoStatus">Listo.</div></div>
+      <div class="hr"></div>
+      <div class="h2">📈 Progreso (últimos 7 días)</div>
+      <canvas id="trend" width="600" height="180" aria-label="Gráfico de minutos totales"></canvas>
+    </section>
+
+    <!-- PRO multipagos -->
+    <section class="card">
+      <div class="h2">Funciones PRO</div>
+      <div class="paywall">
+        <ul class="small" style="line-height:1.9;margin:0 0 10px">
+          <li>🔍 Análisis por franja horaria y día <span class="pill">Preview</span></li>
+          <li>🔕 Plan de notificaciones inteligente (resumen 12:00 / 19:00)</li>
+          <li>📤 Importar CSV de uso (iOS/Android)</li>
+          <li>🤖 Consejero asistido (playbooks dinámicos)</li>
+          <li>👥 Equipo / familia (hasta 5 usuarios)</li>
+        </ul>
+        <div class="row" style="margin-top:10px; align-items:center">
+          <div class="small" style="flex:1"><b>Precio:</b> USD 2 / mes</div>
+          <a class="btn" id="btnStripe" target="_blank">💳 Stripe</a>
+          <a class="btn alt" id="btnPayPal" target="_blank">🅿️ PayPal</a>
+          <a class="btn alt" id="btnMP" target="_blank">💠 MercadoPago</a>
+          <a class="btn alt" id="btnPaddle" target="_blank">🟣 Paddle</a>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <button class="btn alt" id="unlockBtn">🔓 Ya tengo código</button>
+          <input id="unlockCode" class="input" placeholder="Ingresá tu código" style="max-width:220px">
+        </div>
+        <div class="small" id="unlockMsg"></div>
+      </div>
+    </section>
+
+    <!-- Familia / Niños -->
+    <section class="card">
+      <div class="h2">👨‍👩‍👧 Modo Familia (Niños)</div>
+      <div class="small">Perfiles infantiles con límites, horarios y recompensas. Datos locales (offline).</div>
+
+      <div class="row" style="margin:10px 0">
+        <input id="parentPIN" class="input" type="password" maxlength="6" placeholder="PIN de padre/madre (4–6 dígitos)">
+        <button class="btn alt" id="savePIN">🔐 Guardar PIN</button>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="h2">➕ Nuevo perfil de niño</div>
+          <div class="row">
+            <input id="kidName" class="input" placeholder="Nombre del niño/a" maxlength="24">
+            <input id="kidAge" class="input" type="number" min="4" max="17" value="10" placeholder="Edad">
+          </div>
+          <div class="row">
+            <input id="kidDailyMins" class="input" type="number" min="15" max="240" value="60" placeholder="Minutos/día">
+            <input id="kidBedtime" class="input" type="time" value="21:00" placeholder="Hora de dormir">
+          </div>
+          <div class="row">
+            <label class="label">Apps permitidas (lista blanca, separadas por coma)</label>
+            <input id="kidWhitelist" class="input" placeholder="WhatsApp Kids, YouTube Kids, Duolingo">
+          </div>
+          <div class="row">
+            <label class="label">Horario escolar (bloque recomendado)</label>
+            <input id="kidSchoolFrom" class="input" type="time" value="08:00">
+            <input id="kidSchoolTo" class="input" type="time" value="13:00">
+          </div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn" id="addKid">👶 Crear perfil</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="h2">👧 Perfiles</div>
+          <div id="kidsList" class="grid"></div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <div class="h2">📅 Plan infantil & seguimiento</div>
+      <div id="kidPlanBox" class="grid"></div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="kidGenPlan">⚡ Recomendar reglas</button>
+        <button class="btn alt" id="kidExportIcs">📆 Exportar .ics (escuela/dormir)</button>
+        <button class="btn alt" id="kidReport">🖨️ Informe para padres</button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="h2">⭐ Recompensas</div>
+      <div class="small">Cuadro de estrellas semanal por cumplimiento.</div>
+      <div id="starsBoard" class="grid cols-3"></div>
+    </section>
+
+    <!-- Testimonios -->
+    <section class="card" style="grid-column:1/-1">
+      <div class="h2">Lo que dicen nuestros usuarios</div>
+      <div class="testi">
+        <div class="card small">“Bajé 3 horas de pantalla en 10 días. El .ics y los bloques me salvaron.” — Lucía, 🇦🇷</div>
+        <div class="card small">“El modo niños me dio paz. Tenemos reglas claras sin peleas.” — Marco, 🇲🇽</div>
+        <div class="card small">“La app + e-book es la combinación perfecta para empezar.” — Daniela, 🇪🇸</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- E-BOOK GRATIS (revista) -->
+  <section id="ebook" class="container ebook">
+    <div class="page">
+      <h2>DESINTOXICACIÓN DIGITAL — Edición 2025</h2>
+      <div class="row" style="align-items:center"><span class="chip">Autor: SEPTELLIST</span><span class="chip">Diseño Editorial: Esteban Navarro</span><span class="chip">© 2025</span></div>
+      <p style="margin-top:12px">Guía práctica de 7 días para recuperar tu enfoque. Usa IA y diseño conductual para cortar la sobrecarga digital sin dejar la tecnología.</p>
+      <div class="e-cta">
+        <a href="#app" class="btn">🚀 Usar la Web que lo resuelve</a>
+        <button class="btn alt" onclick="window.print()">🖨️ Descargar PDF</button>
+      </div>
+    </div>
+
+    <div class="page two">
+      <div>
+        <h2>01 — La crisis de atención</h2>
+        <p>Revisamos el móvil 96 veces al día. La multitarea baja la productividad hasta 40% y tarda 23 minutos reenfocar tras cada interrupción. El objetivo no es abandonar lo digital, sino <b>usar con intención</b>.</p>
+      </div>
+      <div>
+        <h2>02 — Framework en 3 pilares</h2>
+        <p>1) <b>Diseño del entorno</b> (bloqueos, horarios, lista blanca) 2) <b>Neuroplasticidad dirigida</b> (hábitos + exposición) 3) <b>Mindfulness aplicado</b> (atención plena en el uso).</p>
+      </div>
+    </div>
+
+    <div class="page two">
+      <div>
+        <h2>03 — Programa de 7 días</h2>
+        <p>Día 1: medición y conciencia · Día 2: notificaciones · Día 3: espacios sin tech · Día 4: mañana sin pantallas · Día 5: conexión humana · Día 6: uso estratégico · Día 7: integración.</p>
+      </div>
+      <div>
+        <h2>04 — Herramientas & Tips</h2>
+        <p>Freedom, Forest, RescueTime, Screen Time / Digital Wellbeing, Headspace. Tip: resúmenes de notifs 12:00/19:00 + dos tandas de mensajería.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer small">© 2025 SEPTELLIST · Diseño Editorial: Esteban Navarro · E-book → App PRO (USD 2/mes)</footer>
+
+  <div id="toast"></div>
+
+  <script src="app.js" defer></script>
+</body>
+  </html>
